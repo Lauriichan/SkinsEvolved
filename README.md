@@ -3,7 +3,7 @@
 An easy to use and simple plugin to manipulate player skins 
 or restore premium skins on cracked servers
 
-<p style="text-align: center;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+<p align=center>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
 
 ## Commands
 
@@ -40,7 +40,7 @@ Then there is the option to download a already uploaded skin from a player.
 To do that you can either specify the unique id with "uuid <UniqueId>" or
 You can use the players name with "name <PlayerName>"
 
-<p style="text-align: center;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+<p align=center>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
 
 ## Permissions
 
@@ -67,7 +67,7 @@ By granting this permission the skin will be restored on join.
 Also if no custom skin is set yet, then it will restore the real skin of the player.
 This means that people who join on cracked servers will receive the skin of the premium account that got the same name as them if no custom skin is set.
 
-<p style="text-align: center;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+<p align=center>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
 
 ## That's it!
 
