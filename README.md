@@ -35,6 +35,8 @@ This will update the Skin of the target player to the latest available at Mojang
 This command has multiple options.
 You can download skins from URLs by specifying "url <URL> <Model>"
 The model is for example alex (3px arms) or steve (4px arms)
+For the URL download to work you need to specify at least one Minecraft profile in the <i>mojang.json</i> that is located at <i>plugins/SkinsEvolved</i>.
+An example on how to specify it can be found in the file itself
 Then there is the option to download a already uploaded skin from a player.
 To do that you can either specify the unique id with "uuid <UniqueId>" or
 You can use the players name with "name <PlayerName>"
