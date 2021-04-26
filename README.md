@@ -69,8 +69,8 @@ This means that people who join on cracked servers will receive the skin of the 
 ## That's it!
 
 I hope you will enjoy the plugin
-If there are any issues don't hesitate to report them to me on (GitHub)[https://github.com/Lauriichan/SkinsEvolved/issues].
+If there are any issues don't hesitate to report them to me on [GitHub](https://github.com/Lauriichan/SkinsEvolved/issues).
 
-Also just as a side note for developers, this project was created using (vCompat)[https://github.com/SourceWriters/vCompat].
+Also just as a side note for developers, this project was created using [vCompat](https://github.com/SourceWriters/vCompat).
 A lib I'm working on to allow cross-compatibility between multiple versions.
 Currently (26.04.2021), it supports 1.8 - 1.16.5 and helps with things like Nbt data of items, entity manipulation using packets and a lot of other things
