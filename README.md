@@ -31,7 +31,7 @@ For example: "/skinsevolved update Lauriichan"
 <B>/skinsevolved update</B>
 This will update the Skin of the target player to the latest available at Mojang
 
-<B>/skinsevolved permissions </B>(skinsevolved.permissions)
+<B>/skinsevolved use</B>
 This command has multiple options.
 You can download skins from URLs by specifying "url <URL> <Model>"
 The model is for example alex (3px arms) or steve (4px arms)
