@@ -1,7 +1,7 @@
 # SkinsEvolved ([Spigot](https://www.spigotmc.org/resources/91756/))
   
 An easy to use and simple plugin to manipulate player skins 
-or restore premium skins on cracked servers
+or restore premium skins on offline-mode servers
 
 
 ## Commands
