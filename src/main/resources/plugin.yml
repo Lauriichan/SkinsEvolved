@@ -1,0 +1,40 @@
+main: ${project.groupId}.${project.artifactId}.${project.name}
+name: ${project.name}
+version: ${project.version}
+author: Lauriichan
+api-version: 1.13
+
+commands:
+  skinsevolved:
+    aliases: [skins, skin, skinevolved, skinevolve]
+    
+permissions:
+  skinsevolved.*:
+   description: Wildcard permission
+   default: op
+   children:
+     skinsevolved.permanent: true
+     skinsevolved.command.*: true
+     skinsevolved.permissions: true
+     skinsevolved.reload: true
+  skinsevolved.command.*:
+    description: Command Wildcard permission
+    default: false
+    children:
+      skinsevolved.command.self: true
+      skinsevolved.command.other: true
+  skinsevolved.permanent:
+    description: Restores Skin on join
+    default: false
+  skinsevolved.permissions:
+    description: Display all available permissions with their descriptions
+    default: false
+  skinsevolved.reload:
+    description: Reload all minecraft profiles for custom skin downloading
+    default: false
+  skinsevolved.command.self:
+    description: Permission to use the skins command for yourself
+    default: false
+  skinsevolved.command.other:
+    description: Permission to use the skins command for others
+    default: false
