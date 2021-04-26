@@ -1,0 +1,11 @@
+/bin/
+/target/
+/dependencies/
+/.settings/
+/.idea/
+/.m2/
+/.classpath
+/.project
+/.gitlab-ci.yml
+/test/
+/libraries/spigot/
