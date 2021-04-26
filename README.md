@@ -1,11 +1,11 @@
-## SkinsEvolved
+# SkinsEvolved
   
 An easy to use and simple plugin to manipulate player skins 
 or restore premium skins on cracked servers
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<p style="text-align: center;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
 
-# Commands
+## Commands
 
 The command names of SkinsEvolved are:
 - skinsevolved
@@ -40,9 +40,9 @@ Then there is the option to download a already uploaded skin from a player.
 To do that you can either specify the unique id with "uuid <UniqueId>" or
 You can use the players name with "name <PlayerName>"
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<p style="text-align: center;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
 
-# Permissions
+## Permissions
 
 Most of the permissions are already explained above so I will only explain not yet listed permissions here.
 
@@ -67,9 +67,9 @@ By granting this permission the skin will be restored on join.
 Also if no custom skin is set yet, then it will restore the real skin of the player.
 This means that people who join on cracked servers will receive the skin of the premium account that got the same name as them if no custom skin is set.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<p style="text-align: center;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
 
-# That's it!
+## That's it!
 
 I hope you will enjoy the plugin
 If there are any issues don't hesitate to report them to me on (GitHub)[https://github.com/Lauriichan/SkinsEvolved/issues].
