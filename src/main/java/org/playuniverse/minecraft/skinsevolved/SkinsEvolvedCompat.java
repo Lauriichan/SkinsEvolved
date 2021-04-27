@@ -1,6 +1,5 @@
 package org.playuniverse.minecraft.skinsevolved;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -23,7 +22,6 @@ import org.playuniverse.minecraft.skinsevolved.command.nodes.LiteralNode;
 import org.playuniverse.minecraft.skinsevolved.utils.compat.ICompat;
 
 import com.syntaxphoenix.syntaxapi.logging.ILogger;
-import com.syntaxphoenix.syntaxapi.logging.LogTypeId;
 import com.syntaxphoenix.syntaxapi.utils.java.UniCode;
 
 import net.sourcewriters.minecraft.vcompat.listener.PlayerListener;
@@ -33,7 +31,6 @@ import net.sourcewriters.minecraft.vcompat.reflection.VersionControl;
 import net.sourcewriters.minecraft.vcompat.reflection.data.type.SkinDataType;
 import net.sourcewriters.minecraft.vcompat.reflection.entity.NmsPlayer;
 import net.sourcewriters.minecraft.vcompat.utils.bukkit.BukkitColor;
-import net.sourcewriters.minecraft.vcompat.utils.java.net.tools.UrlEncoder;
 import net.sourcewriters.minecraft.vcompat.utils.logging.BukkitLogger;
 import net.sourcewriters.minecraft.vcompat.utils.minecraft.MojangProfileServer;
 import net.sourcewriters.minecraft.vcompat.utils.minecraft.SkinModel;
