@@ -123,9 +123,6 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
         PostAsync.forcePost(() -> {
             String targetName = sender == target ? "your" : target.getName() + "'s";
             NmsPlayer player = playerProvider.getPlayer(target);
-            logger.log(LogTypeId.DEBUG, url);
-            logger.log(LogTypeId.DEBUG, UrlEncoder.get(StandardCharsets.UTF_8).encode(url));
-            logger.log(LogTypeId.DEBUG, UrlEncoder.get(StandardCharsets.UTF_8).decode(url));
             if (!config.getMojang().request(player, url, model, 15000)) {
                 sender.sendMessage(prefix("Unable to download skin for url '&c" + url + "&7'!"));
                 return;
