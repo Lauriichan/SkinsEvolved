@@ -37,11 +37,18 @@ public class MojangConfig {
     private final File file;
     private final ILogger logger;
 
+    private final PersistentContainer<String> container;
+
     public MojangConfig(ILogger logger, File dataFolder) {
         this.logger = logger;
         this.file = Files.createFile(new File(dataFolder, "mojang.json"));
-        this.mojang = new Mojang(logger, provider, new PersistentSkinStore<>(new PersistentContainer<String>("skins",
-            new File(dataFolder, "skins.nbt"), VersionControl.get().getDataProvider().getRegistry())));
+        this.container = new PersistentContainer<String>("skins", new File(dataFolder, "skins.nbt"),
+            VersionControl.get().getDataProvider().getRegistry());
+        this.mojang = new Mojang(logger, provider, new PersistentSkinStore<>(container));
+    }
+
+    public PersistentContainer<String> getContainer() {
+        return container;
     }
 
     public DefaultMojangProvider getProvider() {

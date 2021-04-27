@@ -1,5 +1,6 @@
 package org.playuniverse.minecraft.skinsevolved;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import org.playuniverse.minecraft.skinsevolved.command.nodes.LiteralNode;
 import org.playuniverse.minecraft.skinsevolved.utils.compat.ICompat;
 
 import com.syntaxphoenix.syntaxapi.logging.ILogger;
+import com.syntaxphoenix.syntaxapi.logging.LogTypeId;
 import com.syntaxphoenix.syntaxapi.utils.java.UniCode;
 
 import net.sourcewriters.minecraft.vcompat.listener.PlayerListener;
@@ -31,18 +33,20 @@ import net.sourcewriters.minecraft.vcompat.reflection.VersionControl;
 import net.sourcewriters.minecraft.vcompat.reflection.data.type.SkinDataType;
 import net.sourcewriters.minecraft.vcompat.reflection.entity.NmsPlayer;
 import net.sourcewriters.minecraft.vcompat.utils.bukkit.BukkitColor;
+import net.sourcewriters.minecraft.vcompat.utils.java.net.tools.UrlEncoder;
 import net.sourcewriters.minecraft.vcompat.utils.logging.BukkitLogger;
 import net.sourcewriters.minecraft.vcompat.utils.minecraft.MojangProfileServer;
 import net.sourcewriters.minecraft.vcompat.utils.minecraft.SkinModel;
+import net.sourcewriters.minecraft.vcompat.utils.thread.PostAsync;
 
 public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
 
     public static final Pattern UUID_PATTERN = Pattern.compile("([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})");
     public static final Pattern SHORT_UUID_PATTERN = Pattern.compile("([a-f0-9]{32})");
     public static final Pattern NAME_PATTERN = Pattern.compile("\\w{3,16}");
-    public static final Pattern MAIL_PATTERN = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE);
-    public static final Pattern URL_PATTERN = Pattern
-        .compile("^(https?:\\/\\/)?([\\w\\Q$-_+!*'(),%\\E]+\\.)+(\\w{2,63})(:\\d{1,4})?([\\w\\Q/$-_+!*'(),%\\E]+\\.?[\\w])*\\/?$");
+    public static final Pattern MAIL_PATTERN = Pattern.compile(
+        "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+        Pattern.CASE_INSENSITIVE);
 
     private final PlayerProvider<?> playerProvider = VersionControl.get().getPlayerProvider();
     private final CommandManager<MinecraftInfo> manager = new CommandManager<>();
@@ -60,15 +64,18 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
         config.reload();
         register(app, new MinecraftCommand(new ManagerRedirect(manager), app, "skinsevolved"));
         PlayerListener.register(app.getPlugin());
+        PlayerListener.registerHandler(this);
+        config.getContainer().forceLoad();
         logger.log("Started!");
     }
-    
+
     public ILogger getLogger() {
         return logger;
     }
 
     @Override
     public void onShutdown(SkinsEvolvedApp app) {
+        config.getContainer().delete();
         logger.log("Stopped!");
     }
 
@@ -98,32 +105,34 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
             return;
         }
         StringReader reader = context.getReader();
-        if (!reader.hasNext()) {
+        if (!reader.skipWhitespace().hasNext()) {
             sender.sendMessage(prefix("Please specify an url"));
             return;
         }
         String url = reader.read();
-        if (!URL_PATTERN.matcher(url).matches()) {
-            sender.sendMessage(prefix("The url '" + url + "' is invalid."));
-            return;
-        }
-        if (!reader.hasNext()) {
+        if (!reader.skipWhitespace().hasNext()) {
             sender.sendMessage(prefix("Please specify the skin model"));
             return;
         }
         SkinModel model = SkinModel.fromString(reader.read());
-        Player target = getTarget(info, reader);
+        Player target = getTarget(info, reader.skipWhitespace());
         if (target == null) {
             return;
         }
-        String targetName = sender == target ? "your" : target.getName() + "'s";
-        NmsPlayer player = playerProvider.getPlayer(target);
-        if (!config.getMojang().request(player, url, model)) {
-            sender.sendMessage(prefix("Unable to download skin for url '&c" + url + "&7'!"));
-            return;
-        }
-        player.update();
-        sender.sendMessage(prefix("You updated &c" + targetName + " &7Skin."));
+        sender.sendMessage(prefix("Trying to load skin for url '&e" + url + "&7'..."));
+        PostAsync.forcePost(() -> {
+            String targetName = sender == target ? "your" : target.getName() + "'s";
+            NmsPlayer player = playerProvider.getPlayer(target);
+            logger.log(LogTypeId.DEBUG, url);
+            logger.log(LogTypeId.DEBUG, UrlEncoder.get(StandardCharsets.UTF_8).encode(url));
+            logger.log(LogTypeId.DEBUG, UrlEncoder.get(StandardCharsets.UTF_8).decode(url));
+            if (!config.getMojang().request(player, url, model, 15000)) {
+                sender.sendMessage(prefix("Unable to download skin for url '&c" + url + "&7'!"));
+                return;
+            }
+            player.update();
+            sender.sendMessage(prefix("You updated &c" + targetName + " &7Skin."));
+        });
     }
 
     private void commandSkinName(CommandContext<MinecraftInfo> context) {
@@ -134,7 +143,7 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
             return;
         }
         StringReader reader = context.getReader();
-        if (!reader.hasNext()) {
+        if (!reader.skipWhitespace().hasNext()) {
             sender.sendMessage(prefix("Please specify a player name"));
             return;
         }
@@ -144,18 +153,21 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
             sender.sendMessage(prefix("The name '" + name + "' is invalid!"));
             return;
         }
-        Player target = getTarget(info, reader);
+        Player target = getTarget(info, reader.skipWhitespace());
         if (target == null) {
             return;
         }
-        String targetName = sender == target ? "your" : target.getName() + "'s";
-        NmsPlayer player = playerProvider.getPlayer(target);
-        if (!config.getMojang().request(player, name)) {
-            sender.sendMessage(prefix("Unable to download skin for name '&c" + name + "&7'!"));
-            return;
-        }
-        player.update();
-        sender.sendMessage(prefix("You updated &c" + targetName + " &7Skin."));
+        sender.sendMessage(prefix("Trying to load skin for name '&e" + name + "&7'..."));
+        PostAsync.forcePost(() -> {
+            String targetName = sender == target ? "your" : target.getName() + "'s";
+            NmsPlayer player = playerProvider.getPlayer(target);
+            if (!config.getMojang().request(player, name)) {
+                sender.sendMessage(prefix("Unable to download skin for name '&c" + name + "&7'!"));
+                return;
+            }
+            player.update();
+            sender.sendMessage(prefix("You updated &c" + targetName + " &7Skin."));
+        });
     }
 
     private void commandSkinUniqueId(CommandContext<MinecraftInfo> context) {
@@ -166,13 +178,13 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
             return;
         }
         StringReader reader = context.getReader();
-        if (!reader.hasNext()) {
-            sender.sendMessage(prefix("Please specify a player name"));
+        if (!reader.skipWhitespace().hasNext()) {
+            sender.sendMessage(prefix("Please specify a player uuid"));
             return;
         }
         String uuid = reader.read();
         int length = uuid.length();
-        if (length != 36 || length != 32) {
+        if (!(length == 36 || length == 32)) {
             sender.sendMessage(prefix("The uuid '&c" + uuid + "&7' is too short or too long (36 or 32 chars)"));
             return;
         }
@@ -182,18 +194,21 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
             return;
         }
         UUID uniqueId = length == 32 ? MojangProfileServer.fromShortenId(uuid) : UUID.fromString(uuid);
-        Player target = getTarget(info, reader);
+        Player target = getTarget(info, reader.skipWhitespace());
         if (target == null) {
             return;
         }
-        String targetName = sender == target ? "your" : target.getName() + "'s";
-        NmsPlayer player = playerProvider.getPlayer(target);
-        if (!config.getMojang().request(player, uniqueId)) {
-            sender.sendMessage(prefix("Unable to download skin for uuid '&c" + uuid + "&7'!"));
-            return;
-        }
-        player.update();
-        sender.sendMessage(prefix("You updated &c" + targetName + " &7Skin."));
+        sender.sendMessage(prefix("Trying to load skin for uuid '&e" + uuid + "&7'..."));
+        PostAsync.forcePost(() -> {
+            String targetName = sender == target ? "your" : target.getName() + "'s";
+            NmsPlayer player = playerProvider.getPlayer(target);
+            if (!config.getMojang().request(player, uniqueId)) {
+                sender.sendMessage(prefix("Unable to download skin for uuid '&c" + uuid + "&7'!"));
+                return;
+            }
+            player.update();
+            sender.sendMessage(prefix("You updated &c" + targetName + " &7Skin."));
+        });
     }
 
     private void commandPermissions(CommandContext<MinecraftInfo> context, SkinsEvolvedApp app) {
@@ -242,7 +257,7 @@ public class SkinsEvolvedCompat implements ICompat, IPlayerHandler {
             sender.sendMessage(prefix("You are lacking the permission '&cskinsevolved.command.self&7' to do this!"));
             return;
         }
-        Player target = getTarget(info, context.getReader());
+        Player target = getTarget(info, context.getReader().skipWhitespace());
         if (target == null) {
             return;
         }

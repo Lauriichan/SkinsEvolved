@@ -15,7 +15,7 @@ public class CommandManager<S> {
 
     private final ConcurrentHashMap<String, RootNode<S>> commands = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ArrayList<String>> aliases = new ConcurrentHashMap<>();
-    
+
     private String global = null;
 
     public String[] getAliases(IPlugin plugin) {
@@ -51,9 +51,7 @@ public class CommandManager<S> {
             });
             return;
         }
-        String[] aliases = map.get(root);
-        Arrays.merge(String[]::new, aliases, node.getName());
-        map.put(root, aliases);
+        map.put(root, Arrays.merge(String[]::new, map.get(root), node.getName()));
     }
 
     private RootNode<S> findNonFork(ForkNode<S> node) {
@@ -72,9 +70,7 @@ public class CommandManager<S> {
 
     private void fillNode(RootNode<S> node, HashMap<RootNode<S>, String[]> map) {
         if (map.containsKey(node)) {
-            String[] aliases = map.get(node);
-            Arrays.merge(String[]::new, aliases, node.getName());
-            map.put(node, aliases);
+            map.put(node, Arrays.merge(String[]::new, map.get(node), node.getName()));
             return;
         }
         map.put(node, new String[] {
@@ -99,7 +95,8 @@ public class CommandManager<S> {
             }
             conflicts.add(alias);
         }
-        return conflicts.isEmpty() ? CommandState.SUCCESS : CommandState.PARTIAL.setAliases(conflicts.toArray(new String[conflicts.size()]));
+        return conflicts.isEmpty() ? CommandState.SUCCESS
+            : CommandState.PARTIAL.setAliases(conflicts.toArray(new String[conflicts.size()]));
     }
 
     private CommandState registerPluginNode(PluginNode<S> node, String[] aliases) {
@@ -131,7 +128,8 @@ public class CommandManager<S> {
             commands.put(pluginNode.getName(), pluginNode);
         }
         Collections.addAll(globalConflicts, conflicts);
-        return globalConflicts.isEmpty() ? CommandState.SUCCESS : CommandState.PARTIAL.setAliases(globalConflicts.toArray(new String[globalConflicts.size()]));
+        return globalConflicts.isEmpty() ? CommandState.SUCCESS
+            : CommandState.PARTIAL.setAliases(globalConflicts.toArray(new String[globalConflicts.size()]));
     }
 
     public boolean unregisterCommand(String name) {
