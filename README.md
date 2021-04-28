@@ -65,6 +65,15 @@ By granting this permission the skin will be restored on join.<br>
 Also if no custom skin is set yet, then it will restore the real skin of the player.<br>
 This means that people who join on cracked servers will receive the skin of the premium account that got the same name as them if no custom skin is set.
 
+## Preview
+
+<details>
+  <summary><a href="Screenshots"><strong>Screenshots</strong></a></summary>
+  <img src="images/PreviewName.png">
+  <img src="images/PreviewUUID.png">
+  <img src="images/PreviewUrl.png">
+</details>
+
 
 ## That's it!
 
