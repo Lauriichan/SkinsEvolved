@@ -68,7 +68,7 @@ This means that people who join on cracked servers will receive the skin of the 
 ## Preview
 
 <details>
-  <summary><a href="Screenshots"><strong>Screenshots</strong></a></summary>
+  <summary><strong>Screenshots</strong></summary>
   <img src="images/PreviewName.png">
   <img src="images/PreviewUUID.png">
   <img src="images/PreviewUrl.png">
