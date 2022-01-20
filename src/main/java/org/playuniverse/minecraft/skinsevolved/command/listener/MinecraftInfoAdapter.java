@@ -1,6 +1,6 @@
 package org.playuniverse.minecraft.skinsevolved.command.listener;
 
-import org.playuniverse.minecraft.skinsevolved.SkinsEvolvedApp;
+import org.playuniverse.minecraft.skinsevolved.SkinsEvolved;
 
 public abstract class MinecraftInfoAdapter {
     
@@ -10,7 +10,7 @@ public abstract class MinecraftInfoAdapter {
         this.info = info;
     }
     
-    public SkinsEvolvedApp getBase() {
+    public SkinsEvolved getBase() {
         return info.getBase();
     }
 

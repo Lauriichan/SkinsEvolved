@@ -1,30 +1,23 @@
 package org.playuniverse.minecraft.skinsevolved.command.listener;
 
 import org.bukkit.command.CommandSender;
-import org.playuniverse.minecraft.skinsevolved.SkinsEvolvedApp;
-import org.playuniverse.minecraft.skinsevolved.SkinsEvolvedCompat;
+import org.playuniverse.minecraft.skinsevolved.SkinsEvolved;
 
 public class MinecraftInfo {
 
-    private final SkinsEvolvedApp base;
-    private final SkinsEvolvedCompat compat;
+    private final SkinsEvolved base;
     private final CommandSender sender;
 
-    public MinecraftInfo(SkinsEvolvedApp base, SkinsEvolvedCompat compat, CommandSender sender) {
+    public MinecraftInfo(SkinsEvolved base, CommandSender sender) {
         this.base = base;
-        this.compat = compat;
         this.sender = sender;
     }
 
     public CommandSender getSender() {
         return sender;
     }
-    
-    public SkinsEvolvedCompat getCompat() {
-        return compat;
-    }
 
-    public SkinsEvolvedApp getBase() {
+    public SkinsEvolved getBase() {
         return base;
     }
 

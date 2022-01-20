@@ -26,19 +26,17 @@ import net.sourcewriters.minecraft.vcompat.util.thread.PostAsync;
 
 final class SkinsEvolvedCommands {
 
-    private final SkinsEvolvedCompat compat;
-    private final SkinsEvolvedApp app;
+    private final SkinsEvolved plugin;
 
     private final PlayerProvider<?> playerProvider = VersionCompatProvider.get().getControl().getPlayerProvider();
 
-    SkinsEvolvedCommands(SkinsEvolvedApp app, SkinsEvolvedCompat compat) {
-        this.compat = compat;
-        this.app = app;
+    SkinsEvolvedCommands(SkinsEvolved plugin) {
+        this.plugin = plugin;
         setup();
     }
 
     private void setup() {
-        CommandManager<MinecraftInfo> manager = compat.getCommandManager();
+        CommandManager<MinecraftInfo> manager = plugin.getCommandManager();
         manager.register(new CommandNode<>("permissions", this::commandPermissions), "perms");
         manager.register(new CommandNode<>("reload", this::commandReload), "rl");
         manager.register(new CommandNode<>("update", this::commandUpdate), "refresh");
@@ -51,7 +49,7 @@ final class SkinsEvolvedCommands {
     }
 
     private String prefix(String input){
-        return compat.prefix(input);
+        return plugin.prefix(input);
     }
 
     private void commandSkinUrl(CommandContext<MinecraftInfo> context) {
@@ -80,7 +78,7 @@ final class SkinsEvolvedCommands {
         PostAsync.forcePost(() -> {
             String targetName = sender == target ? "your" : target.getName() + "'s";
             NmsPlayer player = playerProvider.getPlayer(target);
-            if (!compat.getMojangConfig().getMojang().request(player, url, model, 15000)) {
+            if (!plugin.getMojangConfig().getMojang().request(player, url, model, 15000)) {
                 sender.sendMessage(prefix("Unable to download skin for url '&c" + url + "&7'!"));
                 return;
             }
@@ -103,7 +101,7 @@ final class SkinsEvolvedCommands {
         }
         String name = reader.read();
         int length = name.length();
-        if (length < 3 || length > 16 || !SkinsEvolvedCompat.NAME_PATTERN.matcher(name).matches()) {
+        if (length < 3 || length > 16 || !SkinsEvolved.NAME_PATTERN.matcher(name).matches()) {
             sender.sendMessage(prefix("The name '" + name + "' is invalid!"));
             return;
         }
@@ -115,7 +113,7 @@ final class SkinsEvolvedCommands {
         PostAsync.forcePost(() -> {
             String targetName = sender == target ? "your" : target.getName() + "'s";
             NmsPlayer player = playerProvider.getPlayer(target);
-            if (!compat.getMojangConfig().getMojang().request(player, name)) {
+            if (!plugin.getMojangConfig().getMojang().request(player, name)) {
                 sender.sendMessage(prefix("Unable to download skin for name '&c" + name + "&7'!"));
                 return;
             }
@@ -142,7 +140,7 @@ final class SkinsEvolvedCommands {
             sender.sendMessage(prefix("The uuid '&c" + uuid + "&7' is too short or too long (36 or 32 chars)"));
             return;
         }
-        Matcher matcher = length == 32 ? SkinsEvolvedCompat.SHORT_UUID_PATTERN.matcher(uuid) : SkinsEvolvedCompat.UUID_PATTERN.matcher(uuid);
+        Matcher matcher = length == 32 ? SkinsEvolved.SHORT_UUID_PATTERN.matcher(uuid) : SkinsEvolved.UUID_PATTERN.matcher(uuid);
         if (!matcher.matches()) {
             sender.sendMessage(prefix("The uuid '&c" + uuid + "&7' is invalid!"));
             return;
@@ -156,7 +154,7 @@ final class SkinsEvolvedCommands {
         PostAsync.forcePost(() -> {
             String targetName = sender == target ? "your" : target.getName() + "'s";
             NmsPlayer player = playerProvider.getPlayer(target);
-            if (!compat.getMojangConfig().getMojang().request(player, uniqueId)) {
+            if (!plugin.getMojangConfig().getMojang().request(player, uniqueId)) {
                 sender.sendMessage(prefix("Unable to download skin for uuid '&c" + uuid + "&7'!"));
                 return;
             }
@@ -172,7 +170,7 @@ final class SkinsEvolvedCommands {
             sender.sendMessage(prefix("You are lacking the permission '&cskinsevolved.permissions&7' to do this!"));
             return;
         }
-        List<Permission> permissions = app.getPlugin().getDescription().getPermissions();
+        List<Permission> permissions = plugin.getDescription().getPermissions();
         StringBuilder builder = new StringBuilder("&bSkins&3Evolved &8<-=-> &7Permissions\n");
         for (Permission permission : permissions) {
             builder.append(permission.getName()).append(" => ").append(permission.getDescription());
@@ -200,8 +198,8 @@ final class SkinsEvolvedCommands {
             return;
         }
         sender.sendMessage(prefix("Reloading minecraft profiles..."));
-        compat.getMojangConfig().reload();
-        sender.sendMessage(prefix("Loaded &a" + compat.getMojangConfig().getProvider().getProfiles().size() + " &7Minecraft Profiles!"));
+        plugin.getMojangConfig().reload();
+        sender.sendMessage(prefix("Loaded &a" + plugin.getMojangConfig().getProvider().getProfiles().size() + " &7Minecraft Profiles!"));
     }
 
     private void commandUpdate(CommandContext<MinecraftInfo> context) {

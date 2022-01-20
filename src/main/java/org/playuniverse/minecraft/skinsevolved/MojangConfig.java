@@ -96,8 +96,8 @@ public class MojangConfig {
                     continue;
                 }
                 String username = jsonProfile.get("username").getValue().toString();
-                if (!SkinsEvolvedCompat.NAME_PATTERN.matcher(username).matches()
-                    && !SkinsEvolvedCompat.MAIL_PATTERN.matcher(username).matches()) {
+                if (!SkinsEvolved.NAME_PATTERN.matcher(username).matches()
+                    && !SkinsEvolved.MAIL_PATTERN.matcher(username).matches()) {
                     continue;
                 }
                 provider.create(username, password);

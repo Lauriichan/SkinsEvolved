@@ -10,8 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.playuniverse.minecraft.skinsevolved.SkinsEvolvedApp;
-import org.playuniverse.minecraft.skinsevolved.SkinsEvolvedCompat;
+import org.playuniverse.minecraft.skinsevolved.SkinsEvolved;
 import org.playuniverse.minecraft.skinsevolved.command.CommandContext;
 import org.playuniverse.minecraft.skinsevolved.command.nodes.Node;
 
@@ -19,21 +18,21 @@ public final class MinecraftCommand implements CommandExecutor, TabCompleter {
 
     private final AbstractRedirect redirect;
 
-    private final SkinsEvolvedApp owner;
+    private final SkinsEvolved owner;
     private final String name;
     private final String[] aliases;
 
     private final String fallbackPrefix;
 
     private Consumer<MinecraftInfo> noCommand = (info) -> info.getSender()
-        .sendMessage(info.getCompat().prefix("Please specify a command!"));
+        .sendMessage(info.getBase().prefix("Please specify a command!"));
     private BiConsumer<MinecraftInfo, String> nonExistent = (info, name) -> info.getSender()
-        .sendMessage(info.getCompat().prefix("The command " + name + " doesnt exist!"));
+        .sendMessage(info.getBase().prefix("The command " + name + " doesnt exist!"));
 
     private BiConsumer<MinecraftInfo, Integer> execution;
 
-    private BiConsumer<MinecraftInfo, Throwable> failedComplete = (info, error) -> info.getCompat().getLogger().log(error);
-    private BiConsumer<MinecraftInfo, Throwable> failedCommand = (info, error) -> info.getCompat().getLogger().log(error);
+    private BiConsumer<MinecraftInfo, Throwable> failedComplete = (info, error) -> info.getBase().getDirectLogger().log(error);
+    private BiConsumer<MinecraftInfo, Throwable> failedCommand = (info, error) -> info.getBase().getDirectLogger().log(error);
 
     public MinecraftCommand(String name) {
         this.fallbackPrefix = null;
@@ -43,15 +42,15 @@ public final class MinecraftCommand implements CommandExecutor, TabCompleter {
         this.aliases = null;
     }
 
-    public MinecraftCommand(AbstractRedirect redirect, SkinsEvolvedApp owner, String name, String... aliases) {
-        this.fallbackPrefix = owner.getPlugin().getDescription().getName();
+    public MinecraftCommand(AbstractRedirect redirect, SkinsEvolved owner, String name, String... aliases) {
+        this.fallbackPrefix = owner.getDescription().getName();
         this.redirect = redirect;
         this.owner = owner;
         this.name = name;
         this.aliases = aliases;
     }
 
-    public MinecraftCommand(AbstractRedirect redirect, String fallbackPrefix, SkinsEvolvedApp owner, String name, String... aliases) {
+    public MinecraftCommand(AbstractRedirect redirect, String fallbackPrefix, SkinsEvolved owner, String name, String... aliases) {
         this.fallbackPrefix = fallbackPrefix;
         this.redirect = redirect;
         this.owner = owner;
@@ -71,7 +70,7 @@ public final class MinecraftCommand implements CommandExecutor, TabCompleter {
         return name;
     }
 
-    public SkinsEvolvedApp getOwner() {
+    public SkinsEvolved getOwner() {
         return owner;
     }
 
@@ -148,7 +147,7 @@ public final class MinecraftCommand implements CommandExecutor, TabCompleter {
         if (node == null) {
             return redirect.handleNullComplete(this, sender, args);
         }
-        MinecraftInfo info = new MinecraftInfo(owner, (SkinsEvolvedCompat) owner.getCompat(), sender);
+        MinecraftInfo info = new MinecraftInfo(owner, sender);
         try {
             return node.complete(new CommandContext<>(info, buildArgs(args)));
         } catch (Throwable throwable) {
@@ -161,7 +160,7 @@ public final class MinecraftCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command ignore, String label, String[] args) {
-        MinecraftInfo info = new MinecraftInfo(owner, (SkinsEvolvedCompat) owner.getCompat(), sender);
+        MinecraftInfo info = new MinecraftInfo(owner, sender);
         Node<MinecraftInfo> node = args.length == 0 ? (redirect.hasGlobal() ? redirect.handleCommand(null) : null)
             : redirect.handleCommand(args[0]);
         if (node == null) {

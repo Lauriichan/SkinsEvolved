@@ -25,12 +25,6 @@
 			<groupId>net.sourcewriters.minecraft</groupId>
 			<artifactId>vcompat</artifactId>
 			<version>3.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.sourcewriters.minecraft</groupId>
-			<artifactId>vcompat-updater</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
@@ -71,7 +65,12 @@
 							</excludes>
 						</filter>
 					</filters>
-					<createDependencyReducedPom>true</createDependencyReducedPom>
+					<relocations>
+						<relocation>
+							<pattern>net.sourcewriters.minecraft.vcompat</pattern>
+							<shadedPattern>${project.groupId}.${project.artifactId}.shaded.vcompat</shadedPattern>
+						</relocation>
+					</relocations>
 				</configuration>
 			</plugin>
 			<plugin>
