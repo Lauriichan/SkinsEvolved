@@ -1,11 +1,9 @@
 package org.playuniverse.minecraft.skinsevolved;
 
-
 import java.util.regex.Pattern;
 
 import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.playuniverse.minecraft.skinsevolved.command.CommandManager;
 import org.playuniverse.minecraft.skinsevolved.command.listener.MinecraftCommand;
 import org.playuniverse.minecraft.skinsevolved.command.listener.MinecraftInfo;
@@ -20,7 +18,7 @@ import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.utils.java.UniCode;
 import net.sourcewriters.minecraft.vcompat.util.bukkit.BukkitColor;
 import net.sourcewriters.minecraft.vcompat.util.logging.BukkitLogger;
 
-public class SkinsEvolved extends JavaPlugin implements IPlayerHandler {
+public class SkinsEvolved implements IPlayerHandler {
 
     public static final Pattern UUID_PATTERN = Pattern.compile("([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})");
     public static final Pattern SHORT_UUID_PATTERN = Pattern.compile("([a-f0-9]{32})");
@@ -30,11 +28,24 @@ public class SkinsEvolved extends JavaPlugin implements IPlayerHandler {
         Pattern.CASE_INSENSITIVE);
 
     private final CommandManager<MinecraftInfo> manager = new CommandManager<>();
-
     private final String prefix = "&bSkins&3Evolved &8" + UniCode.ARROWS_RIGHT + " &7";
+    private final SkinsEvolvedPlugin plugin;
 
     private MojangConfig config;
     private ILogger logger;
+    
+    
+    public SkinsEvolved(SkinsEvolvedPlugin plugin) {
+        this.plugin = plugin;
+    }
+    
+    public SkinsEvolvedPlugin getPlugin() {
+        return plugin;
+    }
+    
+    public PluginDescriptionFile getDescription() {
+        return plugin.getDescription();
+    }
 
     public String prefix(String message) {
         return BukkitColor.apply(prefix + message);
@@ -57,7 +68,7 @@ public class SkinsEvolved extends JavaPlugin implements IPlayerHandler {
     }
 
     private void register(MinecraftCommand command) {
-        PluginCommand plugin = getCommand(command.getId());
+        PluginCommand plugin = this.plugin.getCommand(command.getId());
         plugin.setExecutor(command);
         plugin.setTabCompleter(command);
     }
@@ -73,21 +84,19 @@ public class SkinsEvolved extends JavaPlugin implements IPlayerHandler {
         player.update();
     }
 
-    @Override
-    public void onEnable() {
-        logger = new BukkitLogger(this);
-        config = new MojangConfig(logger, getDataFolder());
+    void onEnable() {
+        logger = new BukkitLogger(plugin);
+        config = new MojangConfig(logger, plugin.getDataFolder());
         config.reload();
         register(new MinecraftCommand(new ManagerRedirect(manager), this, "skinsevolved"));
-        PlayerListener.register((Plugin) this);
+        PlayerListener.register(plugin);
         PlayerListener.registerHandler(this);
         config.getContainer().forceLoad();
         new SkinsEvolvedCommands(this);
         logger.log("Started!");
     }
 
-    @Override
-    public void onDisable() {
+    void onDisable() {
         config.getContainer().delete();
         logger.log("Stopped!");
     }

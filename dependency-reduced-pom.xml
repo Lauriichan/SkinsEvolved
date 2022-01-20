@@ -35,12 +35,6 @@
               </excludes>
             </filter>
           </filters>
-          <relocations>
-            <relocation>
-              <pattern>net.sourcewriters.minecraft.vcompat</pattern>
-              <shadedPattern>${project.groupId}.${project.artifactId}.shaded.vcompat</shadedPattern>
-            </relocation>
-          </relocations>
         </configuration>
       </plugin>
       <plugin>
@@ -76,6 +70,12 @@
     </repository>
   </repositories>
   <dependencies>
+    <dependency>
+      <groupId>net.sourcewriters.minecraft</groupId>
+      <artifactId>vcompat</artifactId>
+      <version>3.0.0</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
