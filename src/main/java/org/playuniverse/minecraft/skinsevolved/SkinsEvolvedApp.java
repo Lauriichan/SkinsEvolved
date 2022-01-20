@@ -16,7 +16,7 @@ public class SkinsEvolvedApp extends CompatApp {
     private ICompat compat;
 
     SkinsEvolvedApp(SkinsEvolved plugin) {
-        super(plugin.getDescription().getName(), 2);
+        super(plugin.getDescription().getName(), 3);
         this.plugin = plugin;
         this.bukkitLogger = plugin.getLogger();
     }

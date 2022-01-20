@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.playuniverse.minecraft.skinsevolved.command.nodes.*;
 
-import com.syntaxphoenix.syntaxapi.utils.java.Arrays;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.utils.java.Arrays;
 
 public class CommandManager<S> {
 

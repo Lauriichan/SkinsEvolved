@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
-import com.syntaxphoenix.syntaxapi.logging.color.ColorTools;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.logging.color.ColorTools;
 
 public class StringReader implements Iterator<Character> {
 

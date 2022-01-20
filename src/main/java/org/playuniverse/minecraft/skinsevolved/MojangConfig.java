@@ -7,19 +7,18 @@ import java.util.UUID;
 
 import org.playuniverse.minecraft.skinsevolved.utils.java.JavaHelper;
 
-import com.syntaxphoenix.syntaxapi.json.JsonArray;
-import com.syntaxphoenix.syntaxapi.json.JsonObject;
-import com.syntaxphoenix.syntaxapi.json.JsonValue;
-import com.syntaxphoenix.syntaxapi.json.ValueType;
-import com.syntaxphoenix.syntaxapi.json.io.JsonParser;
-import com.syntaxphoenix.syntaxapi.json.io.JsonWriter;
-import com.syntaxphoenix.syntaxapi.json.value.JsonString;
-import com.syntaxphoenix.syntaxapi.logging.ILogger;
-import com.syntaxphoenix.syntaxapi.utils.java.Files;
-import com.syntaxphoenix.syntaxapi.utils.java.Streams;
-
-import net.sourcewriters.minecraft.vcompat.reflection.VersionControl;
-import net.sourcewriters.minecraft.vcompat.reflection.data.persistence.PersistentContainer;
+import net.sourcewriters.minecraft.vcompat.VersionCompatProvider;
+import net.sourcewriters.minecraft.vcompat.provider.data.persistence.PersistentContainer;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.JsonArray;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.JsonObject;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.JsonValue;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.ValueType;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.io.JsonParser;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.io.JsonWriter;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.value.JsonString;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.logging.ILogger;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.utils.java.Files;
+import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.utils.java.Streams;
 import net.sourcewriters.minecraft.vcompat.skin.DefaultMojangProvider;
 import net.sourcewriters.minecraft.vcompat.skin.Mojang;
 import net.sourcewriters.minecraft.vcompat.skin.PersistentSkinStore;
@@ -43,7 +42,7 @@ public class MojangConfig {
         this.logger = logger;
         this.file = Files.createFile(new File(dataFolder, "mojang.json"));
         this.container = new PersistentContainer<String>("skins", new File(dataFolder, "skins.nbt"),
-            VersionControl.get().getDataProvider().getRegistry());
+            VersionCompatProvider.get().getControl().getDataProvider().getRegistry());
         this.mojang = new Mojang(logger, provider, new PersistentSkinStore<>(container));
     }
 
