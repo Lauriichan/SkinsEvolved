@@ -5,7 +5,7 @@
 
 	<groupId>org.playuniverse.minecraft</groupId>
 	<artifactId>skinsevolved</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<name>SkinsEvolved</name>
 	<packaging>jar</packaging>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>net.sourcewriters.minecraft</groupId>
             <artifactId>vcompat-updater</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
         </dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
