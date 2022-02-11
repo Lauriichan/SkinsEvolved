@@ -11,3 +11,4 @@
 /libraries/spigot/
 /images/
 .vscode/settings.json
+dependency-reduced-pom.xml
