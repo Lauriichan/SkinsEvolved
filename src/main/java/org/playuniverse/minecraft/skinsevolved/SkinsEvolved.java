@@ -9,6 +9,7 @@ import org.playuniverse.minecraft.skinsevolved.command.CommandManager;
 import org.playuniverse.minecraft.skinsevolved.command.listener.MinecraftCommand;
 import org.playuniverse.minecraft.skinsevolved.command.listener.MinecraftInfo;
 import org.playuniverse.minecraft.skinsevolved.command.listener.redirect.ManagerRedirect;
+import org.playuniverse.minecraft.skinsevolved.utils.java.JavaLogger;
 
 import net.sourcewriters.minecraft.vcompat.listener.PlayerListener;
 import net.sourcewriters.minecraft.vcompat.listener.handler.IPlayerHandler;
@@ -84,6 +85,7 @@ public class SkinsEvolved implements IPlayerHandler {
     }
 
     void onEnable() {
+        logger = new JavaLogger(plugin.getLogger());
         config = new MojangConfig(plugin.getLogger(), plugin.getDataFolder());
         config.reload();
         register(new MinecraftCommand(new ManagerRedirect(manager), this, "skinsevolved"));

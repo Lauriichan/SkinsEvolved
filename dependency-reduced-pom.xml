@@ -4,7 +4,7 @@
   <groupId>org.playuniverse.minecraft</groupId>
   <artifactId>skinsevolved</artifactId>
   <name>SkinsEvolved</name>
-  <version>1.2.0</version>
+  <version>1.2.2</version>
   <build>
     <resources>
       <resource>
