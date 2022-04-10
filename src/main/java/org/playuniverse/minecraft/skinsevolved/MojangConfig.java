@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.playuniverse.minecraft.skinsevolved.utils.java.JavaHelper;
+import org.playuniverse.minecraft.skinsevolved.utils.java.JavaLogger;
 
 import net.sourcewriters.minecraft.vcompat.VersionCompatProvider;
 import net.sourcewriters.minecraft.vcompat.provider.data.persistence.PersistentContainer;
@@ -16,7 +19,6 @@ import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.ValueType;
 import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.io.JsonParser;
 import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.io.JsonWriter;
 import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.json.value.JsonString;
-import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.logging.ILogger;
 import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.utils.java.Files;
 import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.utils.java.Streams;
 import net.sourcewriters.minecraft.vcompat.skin.DefaultMojangProvider;
@@ -34,16 +36,16 @@ public class MojangConfig {
     private final Mojang mojang;
 
     private final File file;
-    private final ILogger logger;
+    private final Logger logger;
 
     private final PersistentContainer<String> container;
 
-    public MojangConfig(ILogger logger, File dataFolder) {
+    public MojangConfig(Logger logger, File dataFolder) {
         this.logger = logger;
         this.file = Files.createFile(new File(dataFolder, "mojang.json"));
         this.container = new PersistentContainer<String>("skins", new File(dataFolder, "skins.nbt"),
             VersionCompatProvider.get().getControl().getDataProvider().getRegistry());
-        this.mojang = new Mojang(logger, provider, new PersistentSkinStore<>(container));
+        this.mojang = new Mojang(new JavaLogger(logger), provider, new PersistentSkinStore<>(container));
     }
 
     public PersistentContainer<String> getContainer() {
@@ -96,8 +98,7 @@ public class MojangConfig {
                     continue;
                 }
                 String username = jsonProfile.get("username").getValue().toString();
-                if (!SkinsEvolved.NAME_PATTERN.matcher(username).matches()
-                    && !SkinsEvolved.MAIL_PATTERN.matcher(username).matches()) {
+                if (!SkinsEvolved.NAME_PATTERN.matcher(username).matches() && !SkinsEvolved.MAIL_PATTERN.matcher(username).matches()) {
                     continue;
                 }
                 provider.create(username, password);
@@ -107,7 +108,7 @@ public class MojangConfig {
                 array.add(current);
             }
         } catch (IOException exp) {
-            logger.log(exp);
+            logger.log(Level.WARNING, "Failed to load profiles", exp);
         }
     }
 
@@ -123,7 +124,7 @@ public class MojangConfig {
         try {
             writer.toFile(object, file);
         } catch (IOException exp) {
-            logger.log(exp);
+            logger.log(Level.WARNING, "Failed to save profiles", exp);
         }
     }
 

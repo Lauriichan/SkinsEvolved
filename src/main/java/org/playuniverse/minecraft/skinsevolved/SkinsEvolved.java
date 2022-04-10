@@ -1,5 +1,6 @@
 package org.playuniverse.minecraft.skinsevolved;
 
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import org.bukkit.command.PluginCommand;
@@ -16,7 +17,6 @@ import net.sourcewriters.minecraft.vcompat.provider.entity.NmsPlayer;
 import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.logging.ILogger;
 import net.sourcewriters.minecraft.vcompat.shaded.syntaxapi.utils.java.UniCode;
 import net.sourcewriters.minecraft.vcompat.util.bukkit.BukkitColor;
-import net.sourcewriters.minecraft.vcompat.util.logging.BukkitLogger;
 
 public class SkinsEvolved implements IPlayerHandler {
 
@@ -33,16 +33,15 @@ public class SkinsEvolved implements IPlayerHandler {
 
     private MojangConfig config;
     private ILogger logger;
-    
-    
+
     public SkinsEvolved(SkinsEvolvedPlugin plugin) {
         this.plugin = plugin;
     }
-    
+
     public SkinsEvolvedPlugin getPlugin() {
         return plugin;
     }
-    
+
     public PluginDescriptionFile getDescription() {
         return plugin.getDescription();
     }
@@ -85,20 +84,19 @@ public class SkinsEvolved implements IPlayerHandler {
     }
 
     void onEnable() {
-        logger = new BukkitLogger(plugin);
-        config = new MojangConfig(logger, plugin.getDataFolder());
+        config = new MojangConfig(plugin.getLogger(), plugin.getDataFolder());
         config.reload();
         register(new MinecraftCommand(new ManagerRedirect(manager), this, "skinsevolved"));
         PlayerListener.register(plugin);
         PlayerListener.registerHandler(this);
         config.getContainer().forceLoad();
         new SkinsEvolvedCommands(this);
-        logger.log("Started!");
+        plugin.getLogger().log(Level.FINE, "Started successfully");
     }
 
     void onDisable() {
         config.getContainer().delete();
-        logger.log("Stopped!");
+        plugin.getLogger().log(Level.FINE, "Stopped successfully");
     }
 
 }
